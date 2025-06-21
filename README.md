@@ -1,12 +1,15 @@
 # node 版本 20.0.0
 
-1、反向生成数据模型
+## 1、反向生成数据模型
+
 npx prisma db pull
 
-2、schema.prisma 新增表
+## 2、schema.prisma 新增表
+
 npx prisma db push 如果只是简单测试（不推荐生产环境）https://chat.deepseek.com/a/chat/s/7fd9225a-3200-426d-8aa5-f53ecfcecde4
 
-3、可以进行新的 CRUD 操作
+## 3、可以进行新的 CRUD 操作
+
 router.post('/post'...
 
 # REST API Example
