@@ -176,12 +176,6 @@ router.get('/product', async (ctx) => {
   const id = Number(ctx.query.id)
   const sales = Number(ctx.query.sales)
   try {
-    // const product = await prisma.product.findMany({
-    //   where: {
-    //     id,
-    //     sales,
-    //   },
-    // })
     // 构建动态查询条件
     const whereConditions:any = {};
     
@@ -194,11 +188,11 @@ router.get('/product', async (ctx) => {
     }
     console.log('whereConditions', whereConditions)
 
-    const product = await prisma.product.findMany({
+    const data = await prisma.product.findMany({
       where: whereConditions,
     })
 
-    ctx.body = product
+    ctx.body = data
   } catch {
     ctx.status = 404
     ctx.body = { error: `Product with ${sales} does not exist in the database` }
@@ -213,10 +207,43 @@ router.post('/post', async (ctx) => {
       title,
       content,
       author: { connect: { id } },
+      create_time: new Date(),
+      update_time: new Date(),
     },
   })
   ctx.status = 201 // Created
   ctx.body = newPost
+})
+
+router.get('/getPost', async (ctx) => {
+  const id = Number(ctx.query.id)
+  const published = Number(ctx.query.published)
+  try {
+    // 构建动态查询条件
+    const whereConditions:any = {};
+    
+    if (id) {
+      whereConditions.id = Number(id);
+    }
+    
+    if (published) {
+      whereConditions.published = Number(published);
+    }
+    console.log('whereConditions', whereConditions)
+
+    const data = await prisma.post.findMany({
+      where: whereConditions,
+      // 这里可以根据需求添加其他查询条件：有关联关系-可以查到关联数据
+      include: {
+        author: true,
+      },
+    })
+
+    ctx.body = data
+  } catch {
+    ctx.status = 404
+    ctx.body = { error: `Product with does not exist in the database` }
+  }
 })
 
 app.use(router.routes()).use(router.allowedMethods())
