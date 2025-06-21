@@ -196,7 +196,7 @@ model Post {
   id          Int       @id @default(autoincrement())
   title       String
   content     String?
-  published   Boolean   @default(false)
+  published   String?   @default("false")
   create_time DateTime  @db.DateTime(0)
   update_time DateTime? @db.DateTime(0)
   author      user?     @relation(fields: [authorId], references: [id])

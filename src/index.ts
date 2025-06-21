@@ -217,7 +217,7 @@ router.post('/post', async (ctx) => {
 
 router.get('/getPost', async (ctx) => {
   const id = Number(ctx.query.id)
-  const published = Number(ctx.query.published)
+  const published = ctx.query.published
   try {
     // 构建动态查询条件
     const whereConditions:any = {};
@@ -227,7 +227,7 @@ router.get('/getPost', async (ctx) => {
     }
     
     if (published) {
-      whereConditions.published = Number(published);
+      whereConditions.published = published;
     }
     console.log('whereConditions', whereConditions)
 
