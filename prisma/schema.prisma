@@ -172,6 +172,7 @@ model user {
   order           order[]
   product_comment product_comment[]
   user_address    user_address[]
+  Post            Post[]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -189,3 +190,20 @@ model user_address {
 
   @@index([user_id], map: "user_address_user_id_foreign")
 }
+
+// Data model
+model Post {
+  id        Int     @id @default(autoincrement())
+  title     String
+  content   String?
+  published Boolean @default(false)
+  author    user?   @relation(fields: [authorId], references: [id])
+  authorId  Int?
+}
+
+// model User {
+//   id    Int     @id @default(autoincrement())
+//   email String  @unique
+//   name  String?
+//   posts Post[]
+// }

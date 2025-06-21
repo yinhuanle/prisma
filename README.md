@@ -1,3 +1,14 @@
+# node 版本 20.0.0
+
+1、反向生成数据模型
+npx prisma db pull
+
+2、schema.prisma 新增表
+npx prisma db push 如果只是简单测试（不推荐生产环境）https://chat.deepseek.com/a/chat/s/7fd9225a-3200-426d-8aa5-f53ecfcecde4
+
+3、可以进行新的 CRUD 操作
+router.post('/post'...
+
 # REST API Example
 
 This example shows how to implement a **REST API with TypeScript** using [Koa](https://koajs.com/) and [Prisma Client](https://www.prisma.io/docs/concepts/components/prisma-client). It is based on a SQLite database, you can find the database file with some dummy data at [`./prisma/dev.db`](./prisma/dev.db).
@@ -41,24 +52,27 @@ This example uses a local SQLite database by default. If you want to use to [Pri
 
 1. Set up a new Prisma Postgres instance in the Prisma Data Platform [Console](https://console.prisma.io) and copy the database connection URL.
 2. Update the `datasource` block to use `postgresql` as the `provider` and paste the database connection URL as the value for `url`:
-    ```prisma
-    datasource db {
-      provider = "postgresql"
-      url      = "prisma+postgres://accelerate.prisma-data.net/?api_key=ey...."
-    }
-    ```
 
-    > **Note**: In production environments, we recommend that you set your connection URL via an [environment variable](https://www.prisma.io/docs/orm/more/development-environment/environment-variables/managing-env-files-and-setting-variables), e.g. using a `.env` file.
+   ```prisma
+   datasource db {
+     provider = "postgresql"
+     url      = "prisma+postgres://accelerate.prisma-data.net/?api_key=ey...."
+   }
+   ```
+
+   > **Note**: In production environments, we recommend that you set your connection URL via an [environment variable](https://www.prisma.io/docs/orm/more/development-environment/environment-variables/managing-env-files-and-setting-variables), e.g. using a `.env` file.
+
 3. Install the Prisma Accelerate extension:
-    ```
-    npm install @prisma/extension-accelerate
-    ```
+   ```
+   npm install @prisma/extension-accelerate
+   ```
 4. Add the Accelerate extension to the `PrismaClient` instance:
-    ```diff
-    + import { withAccelerate } from "@prisma/extension-accelerate"
 
-    + const prisma = new PrismaClient().$extends(withAccelerate())
-    ```
+   ```diff
+   + import { withAccelerate } from "@prisma/extension-accelerate"
+
+   + const prisma = new PrismaClient().$extends(withAccelerate())
+   ```
 
 That's it, your project is now configured to use Prisma Postgres!
 
@@ -77,7 +91,6 @@ When `npx prisma migrate dev` is executed against a newly created database, seed
 ```
 npx prisma db seed
 ```
-
 
 ### 3. Start the REST API server
 
@@ -102,6 +115,7 @@ You can access the REST API of the server using the following endpoints:
     - `orderBy` (optional): The sort order for posts in either ascending or descending order. The value can either `asc` or `desc`
 - `/user/:id/drafts`: Fetch user's drafts by their `id`
 - `/users`: Fetch all users
+
 ### `POST`
 
 - `/post`: Create a new post
@@ -123,7 +137,6 @@ You can access the REST API of the server using the following endpoints:
 ### `DELETE`
 
 - `/post/:id`: Delete a post by its `id`
-
 
 ## Evolving the app
 
@@ -195,10 +208,10 @@ app.post('/user/:id/profile', async (req, res) => {
       bio,
       user: {
         connect: {
-          id: Number(id)
-        }
-      }
-    }
+          id: Number(id),
+        },
+      },
+    },
   })
 
   res.json(profile)
@@ -214,7 +227,6 @@ Restart your application server and test out your new endpoint.
 - `/user/:id/profile`: Create a new profile based on the user id
   - Body:
     - `bio: String` : The bio of the user
-
 
 <details><summary>Expand to view more sample Prisma Client queries on <code>Profile</code></summary>
 

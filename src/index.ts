@@ -205,6 +205,20 @@ router.get('/product', async (ctx) => {
   }
 })
 
+// 创建用户的文章
+router.post('/post', async (ctx) => {
+  const { title, content, authorEmail: email, id } = ctx.request.body
+  const newPost = await prisma.post.create({
+    data: {
+      title,
+      content,
+      author: { connect: { id } },
+    },
+  })
+  ctx.status = 201 // Created
+  ctx.body = newPost
+})
+
 app.use(router.routes()).use(router.allowedMethods())
 
 app.listen(3000, () =>
