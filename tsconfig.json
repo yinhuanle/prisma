@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "outDir": "dist",
+    "strict": true,
+    "lib": ["esnext","es6", "dom"],
+    "types": ["@prisma/client", "node"],
+    "esModuleInterop": true
+  }
+}
