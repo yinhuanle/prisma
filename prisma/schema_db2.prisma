@@ -1,0 +1,15 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client_db2" // ✅ 关键：不同输出目录
+}
+
+datasource db {
+  provider = "mysql"
+  url      = "mysql://root:qq1396633@localhost:3306/my_app_db" // 指向 db2
+}
+
+model Products {
+  id    Int    @id @default(autoincrement())
+  name  String
+  price Float
+}

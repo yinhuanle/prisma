@@ -1,0 +1,15 @@
+// 注意：generator 的 output 必须唯一，不能与其他 schema 冲突！
+generator client_db1 {
+  provider = "prisma-client-js"
+  output   = "./generated/client_db1" // ✅ 关键：输出到独立目录
+}
+
+datasource db1 {
+  provider = "mysql"
+  url      = "mysql://root:qq1396633@localhost:3306/prisma_db" // 指向 db1
+}
+
+model User {
+  id   Int    @id @default(autoincrement())
+  name String
+}
