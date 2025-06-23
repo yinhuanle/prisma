@@ -199,7 +199,7 @@ router.get('/product', async (ctx) => {
   }
 })
 
-// 创建用户的文章
+// 新增用户的文章
 router.post('/post', async (ctx) => {
   const { title, content, authorEmail: email, id } = ctx.request.body
   const newPost = await prisma.post.create({
@@ -214,7 +214,47 @@ router.post('/post', async (ctx) => {
   ctx.status = 201 // Created
   ctx.body = newPost
 })
+// 编辑
+router.put('/postEdit', async (ctx) => {
+  const { title, content, authorEmail: email, id } = ctx.request.body
+  const newPost = await prisma.post.update({
+    where: {
+      id,
+    },
+    data: {
+      title,
+      content,
+      author: { connect: { id } },
+      update_time: new Date(),
+    },
+  })
+  ctx.status = 201 // Created
+  ctx.body = newPost
+})
+// 删除
+router.delete('/postDelete', async (ctx) => {
+  const id = Number(ctx.query.id)
+  
+  try {
+    // 构建动态查询条件
+    const whereConditions:any = {};
+    
+    if (id) {
+      whereConditions.id = Number(id);
+    }
+    console.log('whereConditions', whereConditions)
 
+    const data = await prisma.post.delete({
+      where: whereConditions,
+    })
+    
+  ctx.body = data
+  } catch {
+    ctx.status = 404
+    ctx.body = { error: `删除失败` }
+  }
+})
+// 获取文章列表
 router.get('/getPost', async (ctx) => {
   const id = Number(ctx.query.id)
   const published = ctx.query.published
