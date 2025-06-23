@@ -282,7 +282,42 @@ router.get('/getPost', async (ctx) => {
     ctx.body = data
   } catch {
     ctx.status = 404
-    ctx.body = { error: `Product with does not exist in the database` }
+    ctx.body = { error: `获取失败` }
+  }
+})
+// 获取文章列表分页
+router.get('/getPostPage', async (ctx) => {
+  const id = Number(ctx.query.id)
+  const published = ctx.query.published
+  const page = Number(ctx.query.page) || 1
+  const pageSize = Number(ctx.query.pageSize) || 10
+  try {
+    // 构建动态查询条件
+    const whereConditions:any = {};
+    
+    if (id) {
+      whereConditions.id = Number(id);
+    }
+    
+    if (published) {
+      whereConditions.published = published;
+    }
+    console.log('whereConditions', whereConditions)
+
+    const data = await prisma.post.findMany({
+      where: whereConditions,
+      // 这里可以根据需求添加其他查询条件：有关联关系-可以查到关联数据
+      include: {
+        author: true,
+      },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    })
+
+    ctx.body = data
+  } catch {
+    ctx.status = 404
+    ctx.body = { error: `获取失败` }
   }
 })
 
