@@ -298,36 +298,57 @@ router.get('/getPostPage', async (ctx) => {
   const published = ctx.query.published
   const page = Number(ctx.query.page) || 1
   const pageSize = Number(ctx.query.pageSize) || 10
+  
   try {
     // 构建动态查询条件
-    const whereConditions:any = {};
-    
+    const whereConditions: any = {};
     
     if (published) {
       whereConditions.published = published;
     }
     console.log('whereConditions', whereConditions)
 
-    const data = await prisma.post.findMany({
-      where: {
-        AND: [
-          { title: { contains: title } }, // 模糊匹配标题
-          whereConditions, // 添加动态条件
-          { create_time: startTime && endTime ? { gte: BigInt(startTime), lte: BigInt(endTime) } : {}}, // 查时间戳格式
-        ],
-      },
-      // 这里可以根据需求添加其他查询条件：有关联关系-可以查到关联数据
-      include: {
-        author: true,
-      },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-    })
+    // 构建完整的where条件
+    const where = {
+      AND: [
+        { title: { contains: title } },
+        whereConditions,
+        { 
+          create_time: startTime && endTime ? { 
+            gte: BigInt(startTime), 
+            lte: BigInt(endTime) 
+          } : {}
+        },
+      ].filter(condition => Object.keys(condition).length > 0) // 过滤掉空条件
+    }
 
-    ctx.body = data
-  } catch {
+    // 使用事务同时查询数据和总数，确保一致性
+    const [data, total] = await prisma.$transaction([
+      prisma.post.findMany({
+        where,
+        include: {
+          author: true,
+        },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
+      prisma.post.count({ where })
+    ])
+
+    ctx.body = {
+      code: 200, 
+      data,
+      total,
+      page,
+      pageSize,
+      totalPages: Math.ceil(total / pageSize)
+    }
+  } catch (error) {
+    console.error('Error fetching posts:', error)
     ctx.status = 404
-    ctx.body = { error: `获取失败` }
+    ctx.body = { 
+      error: '获取失败'
+    }
   }
 })
 
