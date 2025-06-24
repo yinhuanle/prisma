@@ -293,6 +293,8 @@ router.get('/getPost', async (ctx) => {
 // 获取文章列表分页
 router.get('/getPostPage', async (ctx) => {
   const title = ctx.query.title
+  const startTime = Number(ctx.query.startTime)
+  const endTime = Number(ctx.query.endTime)
   const published = ctx.query.published
   const page = Number(ctx.query.page) || 1
   const pageSize = Number(ctx.query.pageSize) || 10
@@ -311,7 +313,7 @@ router.get('/getPostPage', async (ctx) => {
         AND: [
           { title: { contains: title } }, // 模糊匹配标题
           whereConditions, // 添加动态条件
-          // { create_time: { gte: new Date('2025-06-23T08:48:56Z'), lte: new Date('2025-06-23T08:49:56Z') } }, // 这里可以添加其他查询条件
+          { create_time: startTime && endTime ? { gte: BigInt(startTime), lte: BigInt(endTime) } : {}}, // 查时间戳格式
         ],
       },
       // 这里可以根据需求添加其他查询条件：有关联关系-可以查到关联数据
