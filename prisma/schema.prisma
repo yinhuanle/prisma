@@ -193,13 +193,13 @@ model user_address {
 
 // Data model
 model Post {
-  id          Int       @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   title       String
   content     String?
-  published   String?   @default("false")
-  create_time DateTime  @db.DateTime(0)
-  update_time DateTime? @db.DateTime(0)
-  author      user?     @relation(fields: [authorId], references: [id])
+  published   String? @default("false")
+  create_time BigInt
+  update_time BigInt?
+  author      user?   @relation(fields: [authorId], references: [id])
   authorId    Int?
 }
 

@@ -5,6 +5,11 @@ import { Prisma, PrismaClient } from '@prisma/client'
 
 import { koaBody } from 'koa-body'
 
+(BigInt.prototype as any).toJSON = function() {
+  return this.toString();
+};
+
+
 const app = new Koa()
 const router = new Router()
 
@@ -207,8 +212,8 @@ router.post('/post', async (ctx) => {
       title,
       content,
       author: { connect: { id } },
-      create_time: new Date(),
-      update_time: new Date(),
+      create_time: Math.floor(Date.now()), 
+      update_time: Math.floor(Date.now()),
     },
   })
   ctx.status = 201 // Created
@@ -224,8 +229,8 @@ router.put('/postEdit', async (ctx) => {
     data: {
       title,
       content,
-      author: { connect: { id } },
-      update_time: new Date(),
+      // author: { connect: { id } },
+      update_time: Math.floor(Date.now()),
     },
   })
   ctx.status = 201 // Created
